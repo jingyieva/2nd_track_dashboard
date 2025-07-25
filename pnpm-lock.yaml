@@ -102,6 +102,9 @@ importers:
       globals:
         specifier: ^16.3.0
         version: 16.3.0
+      ramda:
+        specifier: ^0.31.3
+        version: 0.31.3
       semantic-release:
         specifier: ^24.2.7
         version: 24.2.7
@@ -3614,6 +3617,9 @@ packages:
   quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+
+  ramda@0.31.3:
+    resolution: {integrity: sha512-xKADKRNnqmDdX59PPKLm3gGmk1ZgNnj3k7DryqWwkamp4TJ6B36DdpyKEQ0EoEYmH2R62bV4Q+S0ym2z8N2f3Q==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -8006,6 +8012,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-lru@4.0.1: {}
+
+  ramda@0.31.3: {}
 
   randombytes@2.1.0:
     dependencies:

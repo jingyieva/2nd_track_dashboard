@@ -1,0 +1,9 @@
+// DON'T DELETE.
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
