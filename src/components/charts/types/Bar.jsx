@@ -1,39 +1,102 @@
-import { forwardRef } from 'react';
-import { Bar } from 'react-chartjs-2';
+// src/components/charts/Bar.jsx
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList } from "recharts"
 
-export default {
-    component: forwardRef((props, ref) => <Bar {...props} ref={ref} />),
-    formatData: ({ datas, labels }, theme) => {
-        let datasets = [];
-        if (datas && datas.length > 0) {
-            datasets = datas.map(({ data, label }, index) => ({
-                data,
-                label,
-                backgroundColor: datas.length > 1 ? theme.themeColor[index] : theme.themeColor
-            }))
-            
-        }
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
-        return {
-            datasets,
-            labels,
-        };
-    },
-    options: {
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                ticks: {
-                    autoSkip: false,
-                },
-            },
-            y: {
-                ticks: {
-                    autoSkip: false,
-                    precision: 0,
-                    beginAtZero: true,
-                },
-            },
-        },
-    },
-};
+
+export default function CustomBarChart({
+    data = [],
+    containerConfig = {},
+    chartConfig = {}
+}) {
+    const {        
+        showY = false,
+        showX = true,
+        showLengend = false,
+        showTooltip = true,
+        isStackedBar = false,
+        isHorizonal = false,
+        xAxisField = '',
+        yAxisField = '' } = chartConfig;
+
+    return (
+        <ChartContainer config={containerConfig}>
+            {/* Recharts part */}
+            <BarChart 
+                accessibilityLayer 
+                data={data}
+                layout={isHorizonal ? "vertical" : 'horizontal'}
+            >
+                {/* Chart Grid Line */}
+                <CartesianGrid vertical={false} horizontal={false} />
+                {/* YAxis */}
+                { showY || isHorizonal ? (<YAxis 
+                            dataKey={isHorizonal ? xAxisField : yAxisField }
+                            type={isHorizonal ? "category" : "number"}
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            width={100}
+                            // hide
+                             /> ): null }
+                {/* XAxis */}
+                {
+                    showX ? (
+                        <XAxis
+                            dataKey={isHorizonal ? yAxisField : xAxisField}
+                            type={isHorizonal ? "number" : "category"}
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            hide={isHorizonal}
+                        />
+                    ) : null
+                }
+                {/* Legend */}
+                { showLengend ? <ChartLegend content={<ChartLegendContent />} /> : null }
+                {/* Tooltip */}
+                { showTooltip ? (
+                    <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent hideLabel />}
+                    /> ) : null
+                }
+                <Bar 
+                    dataKey={yAxisField} 
+                    fill={`var(--color-${xAxisField}`} 
+                    radius={8}
+                    
+                >
+
+                    {
+                        isHorizonal ? (
+                            <>
+                                {/* <LabelList
+                                    dataKey={xAxisField}
+                                    position="insideLeft"
+                                    offset={8}
+                                    className="fill-(--color-label)"
+                                    fontSize={12}
+                                /> */}
+                                <LabelList
+                                    dataKey={yAxisField}
+                                    position="insideRight"
+                                    offset={8}
+                                    className="fill-foreground"
+                                    fontSize={12}
+                                />
+                            </>
+                        ) : null
+                    }
+                </Bar>
+            </BarChart>
+        </ChartContainer>
+    )
+}
+
