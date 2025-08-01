@@ -8,8 +8,7 @@ import ROUTES from "@/constants/routes";
 
 export default function Navbar (){
     const navigate = useNavigate();
-    const { pathname, ...others } = useLocation()
-    console.log(others)
+    const { pathname } = useLocation()
     const handleNavigate = (path) => {
         navigate(path);
     };
@@ -18,8 +17,8 @@ export default function Navbar (){
         <div className="flex items-center justify-between px-4 py-3">
             {/* Left: Logo + Title */}
             <div className="flex items-center gap-3">
-            <img src="/vite.svg" alt="Logo" className="h-6 w-6" />
-            <h1 className="text-lg font-bold">2nd Track Dashboard</h1>
+                <img src="/vite.svg" alt="Logo" className="h-10 w-10" />
+                <h1 className="text-md font-bold">2nd Track Dashboard</h1>
             </div>
 
             {/* Right: Dropdown + Theme toggle */}
