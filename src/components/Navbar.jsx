@@ -35,7 +35,7 @@ export default function Navbar (){
             </DropdownMenu> */}
             {
                 ROUTES.map((r) => (
-                    <Button variant={pathname === r.path ? 'default' : 'ghost'} onClick={() => handleNavigate(r.path)}>
+                    <Button key={r.path} variant={pathname === r.path ? 'default' : 'ghost'} onClick={() => handleNavigate(r.path)}>
                         {r.label}
                     </Button>
                 ))

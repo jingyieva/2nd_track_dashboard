@@ -11,7 +11,13 @@ import { Table,
 } from "@/components/ui/table";
 
 
-const CustomTable = ({ name = 'tabledata', columns, datas, emptyDataMsg = 'No data found.' }) => {
+const CustomTable = ({ 
+    name = 'tabledata', 
+    emptyDataMsg = 'No data found.', 
+    columns, 
+    datas, 
+    pageCount = 10,  
+ }) => {
     const navigate = useNavigate();
 
     if(!columns || columns.length === 0) {
@@ -22,7 +28,7 @@ const CustomTable = ({ name = 'tabledata', columns, datas, emptyDataMsg = 'No da
         let result = null;
 
         if (column.render) {
-            result = column.render({ rowData: data, column });
+            result = column.render({ rowData: data, column, value: data[column.key] });
         }
         else if (column.formatter) {
             result = column.formatter({ value: data[column.key]});
@@ -34,57 +40,59 @@ const CustomTable = ({ name = 'tabledata', columns, datas, emptyDataMsg = 'No da
         return result;
     }
 
-
     return (
-        <Table>
-            <TableHeader>
-            <TableRow>
-                {
-                    columns.map((column) => (
-                        <TableHead key={`table-header-${column.key}`}>{column.name}</TableHead>
-                    ))
-                }
-            </TableRow>
-            </TableHeader>
-            <TableBody>
-                {(datas && datas.length > 0 ) 
-                    ? (
-                        datas.map((data, index) => (
-                            <TableRow key={`table-row-${index}`}>
-                                {
-                                    columns.map((column) => (
-                                        <TableCell key={`table-row-${index}-cell-${column.key}`}>
-                                            {
-                                                column.key === 'operation' ? (
-                                                    column?.actions?.map((action) => (
-                                                        <Button
-                                                            key={action.id}
-                                                            onClick={() => action.action({ navigate, data })}
-                                                        >
-                                                            詳細
-                                                        </Button>
-                                                    ))
-                                                ) : (
-                                                    <span>
-                                                        {renderDataColumn(column, data)}
-                                                    </span>
-                                                )
-                                            }
-                                        </TableCell>
-                                    )
-                                )}
+        <> 
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    {
+                        columns.map((column) => (
+                            <TableHead key={`${name}-table-header-${column.key}`}>{column.name}</TableHead>
+                        ))
+                    }
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {(datas && datas.length > 0 ) 
+                        ? (
+                            datas.map((data, index) => (
+                                <TableRow key={`table-row-${index}`}>
+                                    {
+                                        columns.map((column) => (
+                                            <TableCell key={`${name}-table-row-${index}-cell-${column.key}`}>
+                                                {
+                                                    column.key === 'operation' ? (
+                                                        column?.actions?.map((action) => (
+                                                            <Button
+                                                                key={action.id}
+                                                                onClick={() => action.action({ navigate, data })}
+                                                            >
+                                                                詳細
+                                                            </Button>
+                                                        ))
+                                                    ) : (
+                                                        <span>
+                                                            {renderDataColumn(column, data)}
+                                                        </span>
+                                                    )
+                                                }
+                                            </TableCell>
+                                        )
+                                    )}
+                                </TableRow>
+                        )))
+                        : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="text-center text-muted-foreground py-4">
+                                    {emptyDataMsg}
+                                </TableCell>
                             </TableRow>
-                    )))
-                    : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="text-center text-muted-foreground py-4">
-                                {emptyDataMsg}
-                            </TableCell>
-                        </TableRow>
-                    )
-                }
-            </TableBody>
-        </Table>
+                        )
+                    }
+                </TableBody>
+            </Table>
+        </>
+
     );    
 }
 

@@ -1,11 +1,129 @@
 // src/pages/Order.jsx
-import Table from "@/components/tables";
+import { useState, useRef } from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+import { usePagination } from "@/hooks/usePagination";
+
+import Table from "@/components/tables";
+import Pagination from '@/components/paginations';
+
+
 const MOCK_ORDERS = [
   {
     order_id: "20250716001",
     order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716002",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716003",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716004",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716005",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716006",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250716007",
+    order_date: "2025-07-16",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250720001",
+    order_date: "2025-07-20",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250730001",
+    order_date: "2025-07-30",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+    {
+    order_id: "20250730002",
+    order_date: "2025-07-30",
+    platform: '蝦皮',
+    commission_fee: 176,
+    shipping_fee_payer: "買家",
+    shipping_fee: 45,
+    cost: 0,
+    sales: 2350,
+    revenue: 2174
+  },
+  {
+    order_id: "20250801001",
+    order_date: "2025-08-01",
     platform: '蝦皮',
     commission_fee: 176,
     shipping_fee_payer: "買家",
@@ -29,7 +147,7 @@ const COLUMN_DEFS = [
     {
         key: 'platform',
         name: '銷售平台',
-        render: ({ rowData, column }) => <Badge>{rowData[column.key]}</Badge>
+        render: ({ value }) => <Badge>{value}</Badge>
     },
     {
         key: 'commission_fee',
@@ -75,18 +193,39 @@ const COLUMN_DEFS = [
 ]
 
 export default function Orders (){
-    
+    const [datas] = useState(MOCK_ORDERS);
+    const tableRef = useRef(null);
+
+    const { currentPage, 
+        switchPage, 
+        changePageSize,
+        currentData, 
+        totalPages, 
+        paginationRange, pageSize } = usePagination({
+            datas, totalCount: datas.length, 
+            scrollTargetRef: tableRef,
+            scrollOffset: 80, // 預留空間給固定 header
+         });
+
     return (
         <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">訂單列表</h2>
             <Card>
-                <CardContent className="p-1">
-                <Table
-                    name="order"
-                    columns={COLUMN_DEFS}
-                    datas={MOCK_ORDERS}
-                    emptyDataMsg="No order found."
-                />
+                <CardContent className="p-1" ref={tableRef}>
+                    <Table
+                        name="order"
+                        columns={COLUMN_DEFS}
+                        datas={currentData}
+                        emptyDataMsg="No order found."
+                    />
+                    <Pagination 
+                        paginationRange={paginationRange}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        switchPage={switchPage}
+                        pageSize={pageSize}
+                        changePageSize={changePageSize}
+                    />
                 </CardContent>
             </Card>
         </div>
