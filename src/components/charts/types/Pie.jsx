@@ -96,10 +96,13 @@ export default function CustomPieChart({
                     /> ) : null
                 }
                 <Pie
+                    cx="50%"
+                    cy="50%"
                     data={data}
                     dataKey={yAxisField}
                     nameKey={xAxisField}
-                    innerRadius={60}
+                    innerRadius="60%"
+                    outerRadius="80%"
                     strokeWidth={5}
                     labelLine={false}
                     label={({ cx, cy, outerRadius, innerRadius, midAngle, percent }) => {

@@ -14,12 +14,11 @@ const PRODUCT_TYPE_DATAS = [
 
 const MONTHLY_TRANX_DATAS = [];
 
-
 export default function Dashboard (){
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="w-full min-w-0">
                 <CardHeader>
                     <CardDescription>本月總交易金額</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -39,7 +38,7 @@ export default function Dashboard (){
                 </CardFooter>
                 
             </Card>
-            <Card>
+            <Card className="w-full min-w-0">
                 <CardHeader>
                     <CardDescription>本月訂單數量</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -59,7 +58,7 @@ export default function Dashboard (){
                 </CardFooter>
                 
             </Card>
-            <Card>
+            <Card className="w-full min-w-0">
                 <CardHeader>
                     <CardDescription>營業總額</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -79,7 +78,7 @@ export default function Dashboard (){
                 </CardFooter>
                 
             </Card>
-            <Card className="col-span-3">
+            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-3">
                 <CardHeader>
                     <CardTitle>近3個月交易趨勢</CardTitle>
                 </CardHeader>
@@ -197,7 +196,7 @@ export default function Dashboard (){
                     />
                 </CardContent>
             </Card>
-            <Card>
+            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
                 <CardHeader>
                     <CardTitle>每月交易趨勢</CardTitle>
                 </CardHeader>
@@ -229,7 +228,7 @@ export default function Dashboard (){
                 </CardContent>
             </Card>
             
-              <Card>
+            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
                 <CardHeader>
                     <CardTitle>熱門商品排名</CardTitle>
                 </CardHeader>
@@ -264,7 +263,7 @@ export default function Dashboard (){
                     />
                 </CardContent>
             </Card>
-             <Card>
+             <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
                 <CardHeader>
                     <CardTitle>商品類別占比</CardTitle>
                 </CardHeader>

@@ -4,11 +4,11 @@ import Navbar from "@/components/Navbar"
 
 export default function PageLayout() {
   return (
-    // max-w-screen-2xl
-    <div className="min-h-screen w-screen bg-background text-foreground flex flex-col items-center">
+    <div className="min-h-dvh w-full bg-background text-foreground">
       <Navbar />
-      <main className="max-w-4/5 w-full flex-1">
-        <div className="mx-auto p-4 md:p-6 lg:p-8">
+      <main className="w-full flex-1">
+        {/* <div className="mx-auto w-full max-w-screen-2xl px-4 py-4 md:px-6 lg:px-8"> */}
+        <div className="container min-w-[320px]">
           <Outlet />
         </div>
       </main>

@@ -58,6 +58,17 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+@layer utilities {
+  .container { 
+    @apply mx-auto w-full p-4 md:px-6 lg:px-8; 
+  }
+  @screen sm { .container { @apply max-w-screen-sm; } }
+  @screen md { .container { @apply max-w-screen-md; } }
+  @screen lg { .container { @apply max-w-screen-lg; } }
+  @screen xl { .container { @apply max-w-screen-xl; } }
+  @screen 2xl { .container { @apply max-w-screen-2xl; } }
+}
+
 a {
   font-weight: 500;
   /* color: #646cff; */
@@ -69,15 +80,11 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  /* min-width: 320px; */
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  overflow-x: hidden; 
 }
 
 @media (prefers-color-scheme: light) {
