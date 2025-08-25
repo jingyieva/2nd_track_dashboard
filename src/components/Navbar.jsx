@@ -29,7 +29,7 @@ export default function Navbar (){
             <div className="flex flex-wrap items-center justify-between">
                 {/* Left: Logo + Title */}
                 <div className="flex items-center gap-3">
-                    <img src="/vite.svg" alt="Logo" className="h-10 w-10" />
+                    <img src="/logo/2nd-track-mark.svg" alt="Logo" className="h-10 w-10" />
                     <p className="text-xl md:text-3xl lg:text-5xl font-extrabold text-balance break-words">2nd Track Dashboard</p>
                 </div>
 
