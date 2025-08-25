@@ -5,6 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write   # 建 tag / 建 GitHub Release 需要
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+
 jobs:
   release:
     runs-on: ubuntu-22.04
@@ -14,6 +22,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # 抓完整歷史
+          fetch-tags: true  # 抓所有 tags（v4 目前會一起帶回，但加著保險）
+          persist-credentials: false
+
+      - name: Fetch tags (belt & suspenders)
+        run: git fetch --tags --force
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
