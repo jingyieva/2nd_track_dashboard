@@ -1,7 +1,7 @@
-import { Card, CardAction, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+// src/pages/Dashboard/index.jsx
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartRenderer } from '@/components/charts/ChartRenderer';
-import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react'; // For theme toggle icons
+
 
 const PRODUCT_TYPE_DATAS = [
     { type: "電器", visitors: 275, fill: "var(--color-電器)" },
@@ -12,72 +12,11 @@ const PRODUCT_TYPE_DATAS = [
     { type: "其他", visitors: 190, fill: "var(--color-其他)" },
 ]
 
-const MONTHLY_TRANX_DATAS = [];
-
-export default function Dashboard (){
+export default function ChartsFold() {
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="w-full min-w-0">
-                <CardHeader>
-                    <CardDescription>本月總交易金額</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        $1,250.00
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                        <TrendingUpIcon />
-                        +12.5%
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Trending up this month <TrendingUpIcon className="size-4" />
-                    </div>
-                </CardFooter>
-                
-            </Card>
-            <Card className="w-full min-w-0">
-                <CardHeader>
-                    <CardDescription>本月訂單數量</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        15
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                        <TrendingUpIcon />
-                        +10%
-                        </Badge>
-                </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Trending up this month <TrendingUpIcon className="size-4" />
-                    </div>
-                </CardFooter>
-                
-            </Card>
-            <Card className="w-full min-w-0">
-                <CardHeader>
-                    <CardDescription>營業總額</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        3240
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                        <TrendingUpIcon />
-                        +5%
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Trending up this month <TrendingUpIcon className="size-4" />
-                    </div>
-                </CardFooter>
-                
-            </Card>
+        <>
+
             <Card className="w-full min-w-0 md:col-span-2 lg:col-span-3">
                 <CardHeader>
                     <CardTitle>近3個月交易趨勢</CardTitle>
@@ -306,7 +245,7 @@ export default function Dashboard (){
                 </CardContent>
             </Card>
 
-            
-        </div>
-    )
+        </>
+    );
+    
 }

@@ -71,7 +71,7 @@ export default function CustomBarChart({
                     dataKey={yAxisField} 
                     fill={`var(--color-${xAxisField}`} 
                     radius={8}
-                    
+                    isAnimationActive={false}
                 >
 
                     {

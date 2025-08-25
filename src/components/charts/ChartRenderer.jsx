@@ -1,37 +1,12 @@
 // src/components/charts/ChartRenderer.jsx
 import { useMemo, useRef } from 'react';
-import {
-  Chart as ChartJS,
-  BarElement,
-  ArcElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-  Title,
-} from 'chart.js';
+
 import { useTheme } from '@/contexts/theme-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 import { chart as chartType } from '@/components/charts/types'
 import { LIGHT_THEME, DARK_THEME } from '@/constants/charts';
-
-
-ChartJS.register(
-  BarElement,
-  ArcElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-  Title,
-);
-
 
 export function ChartRenderer({
   variant = 'Bar',
