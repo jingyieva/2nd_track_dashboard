@@ -38,6 +38,7 @@ export default function CustomPagination({
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious 
+                            aria-disabled={isFirstPage}
                             aria-label="Go to previous page"
                             onClick={() => !isFirstPage && switchPage(currentPage - 1)} 
                             className={cn(
@@ -66,6 +67,7 @@ export default function CustomPagination({
                     }
                     <PaginationItem>
                         <PaginationNext 
+                            aria-disabled={isLastPage}
                             aria-label="Go to next page"
                             onClick={() => !isLastPage && switchPage(currentPage + 1)}
                             className={cn(
