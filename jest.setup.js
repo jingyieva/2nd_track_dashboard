@@ -1,3 +1,4 @@
+import { TextEncoder, TextDecoder } from 'util';
 import "@testing-library/jest-dom";
 
 Object.defineProperty(window, "matchMedia", {
@@ -13,3 +14,25 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: jest.fn(),
   })),
 });
+
+window.scrollTo = jest.fn();
+
+if (typeof global.TextEncoder === 'undefined') {
+  global.TextEncoder = TextEncoder;
+}
+
+if (typeof global.TextDecoder === 'undefined') {
+  global.TextDecoder = TextDecoder;
+}
+
+jest.mock('@radix-ui/react-popover', () => {
+  const actual = jest.requireActual('@radix-ui/react-popover');
+  return { ...actual, Portal: ({ children }) => <>{children}</> };
+});
+
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
+window.ResizeObserver = window.ResizeObserver || class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
