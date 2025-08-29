@@ -95,7 +95,9 @@ describe('CustomTable states', () => {
   it('renders loading skeleton when isLoading', () => {
     // 在 Table 組件加入一個 data-testid="table-skeleton" 以利測試
     renderWithRouter(<Table name="t" columns={COLUMNS} datas={[]} isLoading />);
-    expect(screen.getByTestId('table-skeleton')).toBeInTheDocument();
+    const table = screen.getByTestId("t-table");
+    expect(table).toHaveAttribute('aria-busy', 'true');
+
   });
 
   it('renders error with retry button', async () => {

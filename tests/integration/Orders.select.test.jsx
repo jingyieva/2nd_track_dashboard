@@ -2,20 +2,18 @@
 import { screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithRouter } from '../utils';
+import { waitTableIdle, getRows} from '../helpers';
 
 // 啟用手動 mock（會自動讀 __mocks__ 下的檔案）
 jest.mock('@/components/ui/select')
 
-import Orders from '@/pages/Orders'  // ← 正常匯入，不需要 isolateModules
-
-const getRows = () => screen.getAllByRole('row').slice(1)
-
+import Orders from '@/pages/Orders'  // 正常匯入，不需要 isolateModules
 
 it('filters by platform and can reset to "全部平台"', async () => {
     const user = userEvent.setup()
 
     renderWithRouter(<Orders />)
-    
+    await waitTableIdle();
     const before = getRows().length
     expect(before).toBeGreaterThan(0)
 
@@ -26,7 +24,7 @@ it('filters by platform and can reset to "全部平台"', async () => {
         const rows = getRows()
         expect(rows.length).toBeLessThanOrEqual(before)
         rows.forEach((row) => {
-        expect(within(row).getByText('蝦皮')).toBeInTheDocument()
+            expect(within(row).getByText('蝦皮')).toBeInTheDocument()
         })
     })
 

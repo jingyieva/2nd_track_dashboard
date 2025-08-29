@@ -1,18 +1,19 @@
 import userEvent from '@testing-library/user-event';
 import { screen, within, waitFor, fireEvent } from '@testing-library/react';
 import { renderWithRouter } from '../utils';
-import Orders from '@/pages/Orders';
+import { waitTableIdle, getRows as getTableBodyRows } from '../helpers';
 
-const getTableBodyRows = () => screen.getAllByRole('row').slice(1); // 跳過表頭
+import Orders from '@/pages/Orders';
 
 describe('Orders page', () => {
     let user;
-    beforeEach(() => {
+    beforeEach(async () => {
         user = userEvent.setup({
             // 避免 jsdom 因為沒有實體 layout 而誤判「不可點」
             pointerEventsCheck: 0,
         });
         renderWithRouter(<Orders />);
+        await waitTableIdle();
     });
 
     it('quick search narrows and clears to full', async () => {
@@ -21,10 +22,14 @@ describe('Orders page', () => {
 
         await user.clear(input);
         await user.type(input, '20250716');
-        expect(getTableBodyRows().length).toBeLessThan(total);
+        await waitFor(() => {
+            expect(getTableBodyRows().length).toBeLessThan(total);
+        })
 
         await user.clear(input);
-        expect(getTableBodyRows().length).toBe(total);
+        await waitFor(() => {
+            expect(getTableBodyRows().length).toBe(total);
+        })
     });
 
     it('advanced revenue range (number inputs) filters results', async () => {
@@ -85,9 +90,9 @@ describe('Orders page', () => {
 
     it('empty state when no match', async () => {
         const input = screen.getByPlaceholderText(/搜尋訂單編號|搜尋訂單編號\/平台\/金額/i);
-        await userEvent.clear(input);
-        await userEvent.type(input, 'NO_MATCH_XXXXX');
+        await user.clear(input);
+        await user.type(input, 'NO_MATCH_XXXXX');
 
-        expect(screen.getByText(/No order found/i)).toBeInTheDocument();
+        expect(await screen.getByText(/No order found/i)).toBeInTheDocument();
     });
 });
