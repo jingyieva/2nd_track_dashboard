@@ -10,6 +10,7 @@ import {
 
 
 export default function CustomLineChart({
+    name = 'custom',
     data = [],
     containerConfig = {},
     chartConfig = {}
@@ -25,7 +26,11 @@ export default function CustomLineChart({
     showDataDot = true } = chartConfig;
     
     return (
-        <ChartContainer config={containerConfig} className="aspect-auto h-[250px] w-full">
+        <ChartContainer 
+            config={containerConfig} 
+            className="aspect-auto h-[250px] w-full"
+            data-testid={`${name}-line-chart`}
+        >
             <LineChart
                 accessibilityLayer
                 data={data}

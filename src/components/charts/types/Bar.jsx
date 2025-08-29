@@ -11,6 +11,7 @@ import {
 
 
 export default function CustomBarChart({
+    name = 'custom',
     data = [],
     containerConfig = {},
     chartConfig = {}
@@ -18,27 +19,35 @@ export default function CustomBarChart({
     const {        
         showY = false,
         showX = true,
-        showLengend = false,
+        showLegend = false,
         showTooltip = true,
         isStackedBar = false,
-        isHorizonal = false,
+        isHorizontal = false,
         xAxisField = '',
         yAxisField = '' } = chartConfig;
+    
+        // 允許 yAxisField: string | string[]  
+    const seriesKeys = Array.isArray(yAxisField) ? yAxisField : [yAxisField]
+    const isMultiSeries = seriesKeys.length > 1
+
 
     return (
-        <ChartContainer config={containerConfig}>
+        <ChartContainer 
+            config={containerConfig}
+            data-testid={`${name}-bar-chart`}
+        >
             {/* Recharts part */}
             <BarChart 
                 accessibilityLayer 
                 data={data}
-                layout={isHorizonal ? "vertical" : 'horizontal'}
+                layout={isHorizontal ? "vertical" : 'horizontal'}
             >
                 {/* Chart Grid Line */}
                 <CartesianGrid vertical={false} horizontal={false} />
                 {/* YAxis */}
-                { showY || isHorizonal ? (<YAxis 
-                            dataKey={isHorizonal ? xAxisField : yAxisField }
-                            type={isHorizonal ? "category" : "number"}
+                { showY || isHorizontal ? (<YAxis 
+                            dataKey={isHorizontal ? xAxisField : yAxisField }
+                            type={isHorizontal ? "category" : "number"}
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
@@ -49,17 +58,17 @@ export default function CustomBarChart({
                 {
                     showX ? (
                         <XAxis
-                            dataKey={isHorizonal ? yAxisField : xAxisField}
-                            type={isHorizonal ? "number" : "category"}
+                            dataKey={isHorizontal ? yAxisField : xAxisField}
+                            type={isHorizontal ? "number" : "category"}
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            hide={isHorizonal}
+                            hide={isHorizontal}
                         />
                     ) : null
                 }
                 {/* Legend */}
-                { showLengend ? <ChartLegend content={<ChartLegendContent />} /> : null }
+                { showLegend ? <ChartLegend content={<ChartLegendContent />} /> : null }
                 {/* Tooltip */}
                 { showTooltip ? (
                     <ChartTooltip
@@ -67,34 +76,32 @@ export default function CustomBarChart({
                         content={<ChartTooltipContent hideLabel />}
                     /> ) : null
                 }
-                <Bar 
-                    dataKey={yAxisField} 
-                    fill={`var(--color-${xAxisField}`} 
-                    radius={8}
-                    isAnimationActive={false}
-                >
-
-                    {
-                        isHorizonal ? (
-                            <>
-                                {/* <LabelList
-                                    dataKey={xAxisField}
-                                    position="insideLeft"
-                                    offset={8}
-                                    className="fill-(--color-label)"
-                                    fontSize={12}
-                                /> */}
-                                <LabelList
-                                    dataKey={yAxisField}
-                                    position="insideRight"
-                                    offset={8}
-                                    className="fill-foreground"
-                                    fontSize={12}
-                                />
-                            </>
-                        ) : null
-                    }
-                </Bar>
+                {/* ⬇️ 多個序列時，渲染多個 <Bar>；單序列維持原本行為 */}
+                {seriesKeys.map((key) => {
+                    const fillColor = isMultiSeries ? `var(--color-${key})` : `var(--color-${xAxisField})`
+                    return (
+                        <Bar
+                        key={key}
+                        dataKey={key}
+                        fill={fillColor}
+                        radius={8}
+                        isAnimationActive={false}
+                        stackId={isStackedBar ? "stack" : undefined}
+                        data-testid="bar"
+                        >
+                        {/* 單序列 + 水平時才加內嵌 Label，避免堆疊時文字混亂 */}
+                        {!isMultiSeries && isHorizontal ? (
+                            <LabelList
+                            dataKey={yAxisField}
+                            position="insideRight"
+                            offset={8}
+                            className="fill-foreground"
+                            fontSize={12}
+                            />
+                        ) : null}
+                        </Bar>
+                    )
+                })}
             </BarChart>
         </ChartContainer>
     )

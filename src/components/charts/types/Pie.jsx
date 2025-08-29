@@ -17,13 +17,14 @@ const renderSingleDataLabel = ({ cx, cy, outerRadius, innerRadius, midAngle, per
     const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
 
     return (
-        <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        <text data-testid={`data-label-${x}-${y}`} x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
             {`${((percent ?? 1) * 100).toFixed(0)}%`}
         </text>
     );
 }
 
 export default function CustomPieChart({
+    name = 'custom',
     data = [],
     containerConfig = {},
     chartConfig = {}
@@ -35,13 +36,15 @@ export default function CustomPieChart({
         xAxisField,
         yAxisField
     } = chartConfig;
+    
     const dataTotalAmount = React.useMemo(() => {
         return data.reduce((acc, curr) => acc + curr[yAxisField], 0)
-    }, [])
+    }, [data, yAxisField])
 
     return (
         <ChartContainer 
             config={containerConfig}
+            data-testid={`${name}-pie-chart`}
         >
             {/* Recharts part */}
             <PieChart>
@@ -75,6 +78,7 @@ export default function CustomPieChart({
                                     y={cy}
                                     textAnchor="middle"
                                     dominantBaseline="middle"
+                                    data-testid="center-label"
                                 >
                                     <tspan
                                         x={cx}

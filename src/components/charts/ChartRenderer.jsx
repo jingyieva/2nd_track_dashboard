@@ -1,14 +1,14 @@
 // src/components/charts/ChartRenderer.jsx
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 
 import { useTheme } from '@/contexts/theme-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
-import { chart as chartType } from '@/components/charts/types'
-import { LIGHT_THEME, DARK_THEME } from '@/constants/charts';
+import { chart as chartType } from '@/components/charts/types';
 
 export function ChartRenderer({
+  name,
   variant = 'Bar',
   data,
   options = { chart: {}, container: {}},
@@ -45,6 +45,7 @@ export function ChartRenderer({
     <div className={cn('w-full', className)}>
 
         <ChartComponent
+            name={name}
             data={data}
             chartConfig={options?.chart}
             containerConfig={options?.container}

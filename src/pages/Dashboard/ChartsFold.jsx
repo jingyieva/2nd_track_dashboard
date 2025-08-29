@@ -23,6 +23,7 @@ export default function ChartsFold() {
                 </CardHeader>
                 <CardContent>
                     <ChartRenderer  
+                        name="3-monthly-trend"
                         variant='Line'
                         data={[
                             { date: "2025-04-01", count: 222,},
@@ -141,6 +142,7 @@ export default function ChartsFold() {
                 </CardHeader>
                 <CardContent>
                     <ChartRenderer  
+                        name="monthly-trend"
                         variant='Line'
                         data={[
                             { month: "2025-02", count: 2},
@@ -173,6 +175,7 @@ export default function ChartsFold() {
                 </CardHeader>
                 <CardContent>
                     <ChartRenderer  
+                        name="popular-product"
                         variant='Bar'
                         data={[
                             { productType: "Google Chrome TV", totalPrice: 2350 },
@@ -196,7 +199,7 @@ export default function ChartsFold() {
                             chart: {
                                 xAxisField: 'productType',
                                 yAxisField: 'totalPrice',
-                                isHorizonal: true,
+                                isHorizontal: true,
                             }
                         }}
                     />
@@ -208,6 +211,7 @@ export default function ChartsFold() {
                 </CardHeader>
                 <CardContent>
                     <ChartRenderer  
+                        name="product-type"
                         variant='Pie'
                         data={PRODUCT_TYPE_DATAS.reduce((prev, cur, curIndex) => {
                             return [
