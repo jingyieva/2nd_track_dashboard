@@ -11,14 +11,17 @@ import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
+const isStorybook = process.env.STORYBOOK === '1';
+
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), visualizer({
     template: 'network',
     filename: 'dist/stats.html',
     gzipSize: true,
     brotliSize: true
-  }), VitePWA({
+  }), 
+  !isStorybook && mode === 'production' ? VitePWA({
     registerType: 'autoUpdate',
     includeAssets: ['logo/*', 'favicon.ico'],
     manifest: {
@@ -35,7 +38,8 @@ export default defineConfig({
         type: 'image/png'
       }]
     }
-  })],
+  }) : undefined
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src') // 把 '@' 映射到 src/
@@ -81,4 +85,4 @@ export default defineConfig({
       }
     }]
   }
-});
+}));
