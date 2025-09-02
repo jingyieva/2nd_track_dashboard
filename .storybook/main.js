@@ -8,6 +8,10 @@ const config = {
     '@storybook/addon-essentials',
     // '@storybook/addon-interactions'
   ],
+  viteFinal: async (config) => {
+    // 讓打包後的資產路徑以 /storybook/ 為根
+    return { ...config, base: '/storybook/' };
+  },
 };
 
 export default config;

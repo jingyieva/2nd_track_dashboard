@@ -36,7 +36,12 @@ export default defineConfig(({ mode }) => ({
         src: '/pwa-512.png',
         sizes: '512x512',
         type: 'image/png'
-      }]
+      }],
+      workbox: {
+        // 重要：不要把 /storybook/* 的導覽fallback到 /index.html
+        navigateFallbackDenylist: [/^\/storybook\//],
+        globIgnores: ['**/storybook/**'],
+      },
     }
   }) : undefined
   ],

@@ -1,7 +1,11 @@
 {
     "rewrites": [
         { "source": "/storybook", "destination": "/storybook/index.html" },
+        { "source": "/storybook/", "destination": "/storybook/index.html" },
         { "source": "/storybook/(.*)", "destination": "/storybook/index.html" },
         { "source": "/(.*)", "destination": "/" }
+    ],
+    "redirects": [
+        { "source": "/storybook", "destination": "/storybook/", "statusCode": 308 }
     ]
 }
