@@ -29,7 +29,7 @@
 - **測試框架**：Jest + React Testing Library
 - **自動化流程**：
     - semantic-release（版本號與發版流程）  
-    - （規劃中）Lint/Test 自動化、Storybook + Chromatic、Lighthouse CI
+    - 未來規劃：Lint/Test 自動化、Storybook + Chromatic、Lighthouse CI
 - **部署平台**：Vercel
 
 ---
@@ -64,3 +64,27 @@ pnpm build
 # 執行測試
 pnpm test
 ```
+---
+## 📖 Storybook
+專案已整合 Storybook，用來展示與測試元件狀態（含 Light / Dark 模式）。
+
+### 本機開發
+```bash
+pnpm storybook
+```
+啟動後打開瀏覽器，訪問：
+```
+http://localhost:6006
+```
+### 線上入口
+[Storybook Demo](https://2nd-track-dashboard.vercel.app/storybook/)
+
+### 已收錄元件
+- UI 元件：Button、Badge、Card、Input、Checkbox、Select
+- 功能元件：CustomTable（含排序 / Empty / Loading / Error 狀態）、CustomPagination
+- 組合場景：Table + Pagination
+### 特點
+- 提供 Controls 面板 可互動切換 variant / size / 狀態
+- 支援 Light / Dark Mode 切換
+- 可調整 分頁參數（如 siblingCount、boundaryCount）觀察分頁顯示效果
+---

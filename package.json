@@ -17,7 +17,8 @@
     "test": "jest",
     "clean": "rm -r dist/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "vercel-build": "pnpm build && pnpm build-storybook && mkdir -p dist/storybook && cp -r storybook-static/* dist/storybook/"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.0",
