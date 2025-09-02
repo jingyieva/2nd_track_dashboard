@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.6.1...v1.7.0) (2025-09-02)
+
+
+### Features
+
+* **storybook:** setup Storybook and add stories for Button, Badge, Card, Input, Checkbox, Select, Table, and Pagination ([2b9d7f7](https://github.com/jingyieva/2nd_track_dashboard/commit/2b9d7f71bec3f103307ec75761fed545c0ec2aa0))
+
 ## [1.6.1](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.6.0...v1.6.1) (2025-08-29)
 
 
