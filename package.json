@@ -1,5 +1,9 @@
 {
   "name": "2nd_track_dashboard",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
