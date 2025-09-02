@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.1...v1.7.2) (2025-09-02)
+
+
+### Bug Fixes
+
+* **vercel:** correct rewrite rules for Storybook and SPA routing ([7fe2015](https://github.com/jingyieva/2nd_track_dashboard/commit/7fe20159e31b150086012e182a0df6a243ad1713))
+
 ## [1.7.1](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.0...v1.7.1) (2025-09-02)
 
 
