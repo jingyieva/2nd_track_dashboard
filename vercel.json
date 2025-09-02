@@ -1,13 +1,7 @@
 {
     "rewrites": [
-        { "source": "/storybook/:match*", "destination": "/storybook/:match*" },
+        { "source": "/storybook", "destination": "/storybook/index.html" },
+        { "source": "/storybook/(.*)", "destination": "/storybook/index.html" },
         { "source": "/(.*)", "destination": "/" }
-    ],
-    "redirects": [
-        {
-            "source": "/(.*)",
-            "destination": "/404",
-            "statusCode": 404
-        }
     ]
 }
