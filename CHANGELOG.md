@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.2...v1.7.3) (2025-09-02)
+
+
+### Bug Fixes
+
+* **vercel:** redirect /storybook -> /storybook/ to ensure correct asset base ([c6ae9a0](https://github.com/jingyieva/2nd_track_dashboard/commit/c6ae9a0040397c436acf7e580a2321e04ebb1eb8))
+
 ## [1.7.2](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.1...v1.7.2) (2025-09-02)
 
 
