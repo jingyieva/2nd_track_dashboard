@@ -22,6 +22,7 @@ export function useTableData({ data, columns, filters, sort }) {
             out = out.filter((row) =>
                 keys.some((k) => String(row?.[k] ?? "").toLowerCase().includes(kw))
             );
+            console.log(out)
         }
 
         // select filters

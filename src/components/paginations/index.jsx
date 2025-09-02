@@ -49,8 +49,8 @@ export default function CustomPagination({
                     </PaginationItem>
                     {
 
-                        paginationRange.map((r) => (
-                            <PaginationItem key={`page-${r}`}>
+                        paginationRange.map((r, index) => (
+                            <PaginationItem key={`page-${r}-${index}`}>
                             {
                                 (r === 'ELLIPSIS') ? (
                                     <PaginationEllipsis aria-hidden="true"/>
