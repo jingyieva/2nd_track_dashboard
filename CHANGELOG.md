@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.0...v1.7.1) (2025-09-02)
+
+
+### Bug Fixes
+
+* **deploy:** disable PWA during Storybook build and adjust vercel-build for combined deployment ([6e2a599](https://github.com/jingyieva/2nd_track_dashboard/commit/6e2a59980d0aa6711487d94d9250a3f200736a65))
+
 # [1.7.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.6.1...v1.7.0) (2025-09-02)
 
 
