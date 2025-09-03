@@ -1,7 +1,7 @@
 // src/components/charts/ChartRenderer.jsx
 import { useRef } from 'react';
 
-import { useTheme } from '@/contexts/theme-context';
+// import { useTheme } from '@/contexts/theme-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +16,7 @@ export function ChartRenderer({
   fallback = null,
   className = '',
 }) {
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
   const ChartComponent = chartType[variant];
   const chartRef = useRef(null);
 

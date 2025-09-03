@@ -1,4 +1,4 @@
-// src/components/charts/Line.jsx
+// src/components/charts/types/Line.jsx
 
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts"
 

@@ -1,4 +1,4 @@
-// src/components/charts/Bar.jsx
+// src/components/charts/types/Bar.jsx
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList } from "recharts"
 
 import {
@@ -46,7 +46,7 @@ export default function CustomBarChart({
                 <CartesianGrid vertical={false} horizontal={false} />
                 {/* YAxis */}
                 { showY || isHorizontal ? (<YAxis 
-                            dataKey={isHorizontal ? xAxisField : yAxisField }
+                            dataKey={isHorizontal ? xAxisField : undefined }
                             type={isHorizontal ? "category" : "number"}
                             tickLine={false}
                             tickMargin={10}
@@ -58,7 +58,7 @@ export default function CustomBarChart({
                 {
                     showX ? (
                         <XAxis
-                            dataKey={isHorizontal ? yAxisField : xAxisField}
+                            dataKey={isHorizontal ? undefined : xAxisField}
                             type={isHorizontal ? "number" : "category"}
                             tickLine={false}
                             tickMargin={10}
@@ -81,22 +81,22 @@ export default function CustomBarChart({
                     const fillColor = isMultiSeries ? `var(--color-${key})` : `var(--color-${xAxisField})`
                     return (
                         <Bar
-                        key={key}
-                        dataKey={key}
-                        fill={fillColor}
-                        radius={8}
-                        isAnimationActive={false}
-                        stackId={isStackedBar ? "stack" : undefined}
-                        data-testid="bar"
+                            key={`${data[`${xAxisField}`]}-${key}`}
+                            dataKey={key}
+                            fill={fillColor}
+                            radius={4}
+                            isAnimationActive={false}
+                            stackId={isStackedBar ? "stack" : undefined}
+                            data-testid="bar"
                         >
                         {/* 單序列 + 水平時才加內嵌 Label，避免堆疊時文字混亂 */}
                         {!isMultiSeries && isHorizontal ? (
                             <LabelList
-                            dataKey={yAxisField}
-                            position="insideRight"
-                            offset={8}
-                            className="fill-foreground"
-                            fontSize={12}
+                                dataKey={yAxisField}
+                                position="insideRight"
+                                offset={8}
+                                className="fill-foreground"
+                                fontSize={12}
                             />
                         ) : null}
                         </Bar>

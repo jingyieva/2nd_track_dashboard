@@ -1,4 +1,4 @@
-// src/components/charts/Pie.jsx
+// src/components/charts/types/Pie.jsx
 
 import React from "react"
 import { Pie, PieChart } from "recharts"
