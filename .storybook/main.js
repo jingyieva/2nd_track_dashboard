@@ -1,12 +1,11 @@
 const config = {
   framework: '@storybook/react-vite',
   stories: [
+    '../src/**/*.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)'
   ],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    // '@storybook/addon-interactions'
+    '@storybook/addon-docs'
   ],
   viteFinal: async (config) => {
     // 讓打包後的資產路徑以 /storybook/ 為根

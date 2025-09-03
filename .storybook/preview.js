@@ -12,14 +12,14 @@ const preview = {
   },
   decorators: [
     (Story, context) => {
-      const theme = context.globals.theme || 'light';
+      const theme = context.globals.theme || 'dark';
       document.documentElement.classList.remove('light', 'dark');
       document.documentElement.classList.add(theme);
       return Story();
     },
   ],
   globals: {
-    theme: 'light',
+    theme: 'dark',
   },
   globalTypes: {
     theme: {
@@ -35,6 +35,7 @@ const preview = {
       },
     },
   },
+  tags: ['autodocs'],
 };
 
 export default preview;
