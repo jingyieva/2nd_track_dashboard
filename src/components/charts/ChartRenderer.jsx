@@ -40,11 +40,17 @@ export function ChartRenderer({
       </div>
     );
   }
+  const seriesKeySig = Array.isArray(options?.chart?.yAxisField)
+  ? options.chart.yAxisField.join(',')
+  : options?.chart?.yAxisField ?? '';
+
+  const chartKey = `${variant}:${seriesKeySig}`;
 
   return (
     <div className={cn('w-full', className)}>
 
         <ChartComponent
+            key={chartKey}
             name={name}
             data={data}
             chartConfig={options?.chart}

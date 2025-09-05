@@ -1,4 +1,5 @@
 import React from 'react';
+import { within, userEvent } from 'storybook/test';
 import { ChartRenderer } from '@/components/charts/ChartRenderer';
 
 // ---- Demo Data ----
@@ -275,8 +276,53 @@ export const ToggleDataset = {
     data: monthData,
   },
   play: async ({ canvasElement }) => {
-    const { within, userEvent } = await import('@storybook/testing-library');
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByTestId('toggle'));
   },
 };
+
+export const ToggleStacked = {
+    args: { 
+        variant: 'Bar', 
+        data: multiSeries, 
+        options:{ 
+            container: defaultContainer,
+            chart:{ 
+                xAxisField: 'month', 
+                yAxisField: ['A','B','C'], 
+                showLegend: true 
+            }
+        }
+    },
+    render: (args) => {
+        const [stacked, setStacked] = React.useState(false);
+
+        return (
+        <div className="space-y-4">
+            <button
+                data-testid="isStackedBar"
+                onClick={() => setStacked((s) => !s)}
+                className="rounded bg-blue-500 px-3 py-1 text-white"
+            >
+            {stacked ? 'stacked' : 'unstacked'}
+            </button>
+
+            <ChartRenderer
+                {...args}
+                options={{
+                    ...args.options,
+                    chart: {
+                    ...args.options.chart,
+                    isStackedBar: stacked,
+                    showLegend: true,
+                    },
+                }}
+            />
+        </div>
+        );
+    },
+    play: async ({ canvasElement, args }) => {
+        const canvas = within(canvasElement);
+        await userEvent.click(canvas.getByTestId("isStackedBar"));
+    }
+}

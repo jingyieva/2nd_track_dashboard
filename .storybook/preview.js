@@ -8,6 +8,7 @@ const preview = {
         color: /(background|color)$/i,
         date: /Date$/,
       },
+      exclude: ['fallback', 'className', 'options.container']
     },
   },
   decorators: [
