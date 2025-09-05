@@ -1,3 +1,16 @@
+# [1.8.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.3...v1.8.0) (2025-09-05)
+
+
+### Bug Fixes
+
+* **chart:** 修正 StackedBar 在啟用 Y 軸時無法正常顯示長條圖 ([d15cc35](https://github.com/jingyieva/2nd_track_dashboard/commit/d15cc35e2eb21fbcce46789d589cc5a7adf68df2))
+
+
+### Features
+
+* **storybook:** Add ToggleStacked Story, support the interaction of stacked/unstacked barchart ([3f24378](https://github.com/jingyieva/2nd_track_dashboard/commit/3f24378c7e98d99364e9a79fc48869e430a1c94c))
+* **storybook:** 新增 Chart.stories.jsx，展示 Bar/Line/Pie 及狀態 ([e8da918](https://github.com/jingyieva/2nd_track_dashboard/commit/e8da918382695c2ff6d149cacf1e270fb639c2fd))
+
 ## [1.7.3](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.2...v1.7.3) (2025-09-02)
 
 
