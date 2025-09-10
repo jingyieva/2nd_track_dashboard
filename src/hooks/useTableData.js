@@ -18,11 +18,16 @@ export function useTableData({ data, columns, filters, sort }) {
 
         // Quick filter：掃描所有 column.key
         if (kw) {
-            const keys = columns.map((c) => c.key);
             out = out.filter((row) =>
-                keys.some((k) => String(row?.[k] ?? "").toLowerCase().includes(kw))
+              columns.some((col) => {
+                const raw = row?.[col.key];
+                const text = typeof col?.searchText === "function"
+                  ? col.searchText(raw, row)
+                  : raw;
+
+                return String(text ?? "").toLowerCase().includes(kw);
+              })
             );
-            console.log(out)
         }
 
         // select filters
