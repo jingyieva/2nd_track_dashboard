@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/jingyieva/2nd_track_dashboard/compare/v2.0.0...v2.0.1) (2025-09-12)
+
+
+### Bug Fixes
+
+* **msw:** enable MSW in both dev and production via VITE_ENABLE_MSW flag ([ea79255](https://github.com/jingyieva/2nd_track_dashboard/commit/ea79255fd4d55e761e1b35fd92dee5342972d076))
+
 # [2.0.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.8.0...v2.0.0) (2025-09-12)
 
 
