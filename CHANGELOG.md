@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/jingyieva/2nd_track_dashboard/compare/v2.0.1...v2.0.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **orders:** prevent revenue slider from resetting after release ([5e521cc](https://github.com/jingyieva/2nd_track_dashboard/commit/5e521cc0fcee4e3bb11a2c96c273c6799c5b3bf5))
+
 ## [2.0.1](https://github.com/jingyieva/2nd_track_dashboard/compare/v2.0.0...v2.0.1) (2025-09-12)
 
 
