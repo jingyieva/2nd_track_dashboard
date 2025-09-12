@@ -36,5 +36,24 @@ export const getOrders = ({ keyword, platform, revRange, sort, page, pageSize } 
     return result;
 }
 
-export const getKpis = (params) =>
-    source === 'mock' ? mock.getKpis(params) : remote.getKpis(params);
+
+export const getKpis = (params = {}) =>
+  source === 'mock' ? mock.getKpis(params) : remote.getKpis(params);
+
+export const getTrendStats = (params = {}) =>
+  source === 'mock' ? mock.getTrendStats(params) : remote.getTrendStats(params);
+
+export const getPlatformStats = (params = {}) =>
+  source === 'mock' ? mock.getPlatformStats(params) : remote.getPlatformStats(params);
+
+export const getCategoryStats = (params = {}) =>
+  source === 'mock' ? mock.getCategoryStats(params) : remote.getCategoryStats(params);
+
+/**
+ * 取得銷售額 vs 淨收入的散點資料（訂單層級）
+ * params: { from?:number, to?:number, platform?:'shopee'|'ruten'|'other'|'' }
+ */
+export const getSalesRevenueScatter = (params = {}) => {
+  const src = source === 'mock' ? mock : remote;
+  return src.getSalesRevenueScatter(params);
+};

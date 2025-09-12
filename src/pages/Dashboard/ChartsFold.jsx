@@ -1,255 +1,356 @@
-// src/pages/Dashboard/index.jsx
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// src/pages/Dashboard/ChartsFold.jsx
+import { useEffect, useMemo, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// store
+import { useFiltersStore } from "@/stores/filters";
+// utils
+import { resolveRangeByPreset } from "@/utils/date";
+// actions
+import { getTrendStats, getPlatformStats, getCategoryStats, getSalesRevenueScatter } from "@/actions/orders";
+// custom components
 import { ChartRenderer } from '@/components/charts/ChartRenderer';
+import VisuallyHidden from "@/components/a11y/VisuallyHidden";
+import ChartA11y from "@/components/a11y/ChartA11y";
+/** constants */
+import { PLATFORMS } from "@/constants";
 
+const PlatformScatterTooltip = ({ active, payload }) => {
 
-const PRODUCT_TYPE_DATAS = [
-    { type: "電器", visitors: 275, fill: "var(--color-電器)" },
-    { type: "裝飾品", visitors: 200, fill: "var(--color-裝飾品)" },
-    { type: "扭蛋", visitors: 287, fill: "var(--color-扭蛋)" },
-    { type: "服飾", visitors: 173, fill: "var(--color-服飾)" },
-    { type: "家用小物", visitors: 190, fill: "var(--color-家用小物)" },
-    { type: "其他", visitors: 190, fill: "var(--color-其他)" },
-]
+    if (!active || !payload?.length) return null;
+
+    // Recharts 會把該點的原始資料放在 payload[0].payload
+    const d = payload[0]?.payload ?? {};
+    const dateStr = d.order_date
+        ? new Date(d.order_date).toLocaleDateString()
+        : "";
+
+    const srText = [
+        dateStr ? `${dateStr}` : null,
+        d.order_id ? `訂單編號 ${d.order_id}` : null,
+        d.platform ? `平台 ${platformLabel(d.platform)}` : null,
+        `銷售額 ${Number(d.sales).toLocaleString()}`,
+        `淨收入 ${Number(d.revenue).toLocaleString()}`
+    ].filter(Boolean).join("，");
+
+    function platformLabel(v) {
+        if (v === 'shopee') return '蝦皮';
+        if (v === 'ruten' || v === 'carousell') return '旋轉';
+        if (v === 'other') return '其他';
+        return v;
+    }
+
+    return (
+        <div className="rounded-md bg-popover px-3 py-2 text-popover-foreground shadow-md ring-1 ring-border">
+            {/* 標題：日期 + 訂單編號 */}
+            <div className="text-sm font-medium mb-1">
+                {dateStr} <br /> {d.id ? ` ${d.id}` : ""}
+            </div>
+
+            {/* 內容列 */}
+            <div className="text-sm space-y-0.5">
+                <div>銷售額：{Number(d.sales ?? payload[0]?.value).toLocaleString()}</div>
+                <div>淨收入：{Number(d.revenue ?? payload[1]?.value).toLocaleString()}</div>
+            </div>
+            <VisuallyHidden aria-live="polite">{srText}</VisuallyHidden>
+        </div>
+    );
+}
+
+const PlatformScatterLegend = ({ legendKeys, legendMaps, availableKeys }) => {
+
+    return (
+        <ul className="flex flex-wrap justify-center gap-3 text-sm" role="list" aria-label="平台圖例 (有資料者醒目顯示)">
+            {legendKeys.map((key) => {
+                const ui = legendMaps[key] ?? { label: key, color: "#888" };
+                const hasData = availableKeys.has(key);
+                return (
+                    <li key={key} className="flex items-center gap-1" aria-label={`${ui.label} ${hasData ? '有資料' : '無資料'}`}>
+                        <span
+                            aria-hidden="true"
+                            className="inline-block size-3 rounded-full"
+                            style={{ background: hasData ? ui.color : "var(--muted-foreground)" }}
+                        />
+                        <span className={hasData ? "" : "text-muted-foreground"}>{ui.label}</span>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
 
 export default function ChartsFold() {
+    const { preset, platform } = useFiltersStore();
+    const range = useMemo(() => resolveRangeByPreset(preset), [preset]);
+
+    // 1) 交易趨勢統計（Line）
+    const [trend, setTrend] = useState([]);
+    // 2) 平台交易統計（Bar）
+    const [platforms, setPlatforms] = useState([]);
+    // 3) 商品類別占比（Pie）
+    const [categories, setCategories] = useState([]);
+    // 4) 銷售額 vs 淨收入分布
+    const [scatter, setScatter] = useState({ datas: [], total: 0, loading: true, error: null, meta: {} });
+
+    const [loading, setLoading] = useState({ trend: false, platforms: false, categories: false });
+    const setLoad = (k, v) => setLoading((s) => ({ ...s, [k]: v }));
+
+    // 5) 建立完整清單與「本次有資料」集合
+    const allKeys = scatter.meta?.platformsAll ?? Object.keys(PLATFORMS);
+    const availableKeys = new Set(scatter.meta?.platformsAvailable ?? scatter.datas?.map(d => d.platform));
+
+    const platformLegend = <PlatformScatterLegend legendKeys={allKeys} legendMaps={PLATFORMS} availableKeys={availableKeys} />
+
+    useEffect(() => {
+        let dead = false;
+        (async () => {
+            setLoad('trend', true);
+            try {
+                const res = await getTrendStats({ ...range, platform: platform || undefined });
+                if (!dead) setTrend(res?.datas ?? []);
+            } finally { if (!dead) setLoad('trend', false); }
+        })();
+        return () => { dead = true; };
+    }, [range.from, range.to, platform]);
+
+    useEffect(() => {
+        let dead = false;
+        (async () => {
+            setLoad('platforms', true);
+            try {
+                const res = await getPlatformStats({ ...range });
+                if (!dead) setPlatforms(res?.datas ?? []);
+            } finally { if (!dead) setLoad('platforms', false); }
+        })();
+        return () => { dead = true; };
+    }, [range.from, range.to]);
+
+    useEffect(() => {
+        let dead = false;
+        (async () => {
+            setLoad('categories', true);
+            try {
+                const res = await getCategoryStats({ ...range });
+                if (!dead) setCategories(res?.datas ?? []);
+            } finally { if (!dead) setLoad('categories', false); }
+        })();
+        return () => { dead = true; };
+    }, [range.from, range.to]);
+
+    useEffect(() => {
+        let dead = false;
+        (async () => {
+            setLoad('scatter', true);
+            try {
+                const res = await getSalesRevenueScatter({ ...range, platform: platform || undefined });
+                if (!dead) setScatter(res);
+            } finally { if (!dead) setLoad('scatter', false); }
+        })();
+        return () => { dead = true; };
+
+    }, [range.from, range.to, platform]);
 
     return (
         <>
-
             <Card className="w-full min-w-0 md:col-span-2 lg:col-span-3">
                 <CardHeader>
-                    <CardTitle>近3個月交易趨勢</CardTitle>
+                    <CardTitle id="chart-title-trend">交易趨勢統計</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ChartRenderer  
-                        name="3-monthly-trend"
-                        variant='Line'
-                        data={[
-                            { date: "2025-04-01", count: 222,},
-                            { date: "2025-04-02", count: 97, },
-                            { date: "2025-04-03", count: 167,},
-                            { date: "2025-04-04", count: 242,},
-                            { date: "2025-04-05", count: 373,},
-                            { date: "2025-04-06", count: 301,},
-                            { date: "2025-04-07", count: 245,},
-                            { date: "2025-04-08", count: 409,},
-                            { date: "2025-04-09", count: 59, },
-                            { date: "2025-04-10", count: 261,},
-                            { date: "2025-04-11", count: 327,},
-                            { date: "2025-04-12", count: 292,},
-                            { date: "2025-04-13", count: 342,},
-                            { date: "2025-04-14", count: 137,},
-                            { date: "2025-04-15", count: 120,},
-                            { date: "2025-04-16", count: 138,},
-                            { date: "2025-04-17", count: 446,},
-                            { date: "2025-04-18", count: 364,},
-                            { date: "2025-04-19", count: 243,},
-                            { date: "2025-04-20", count: 89, },
-                            { date: "2025-04-21", count: 137,},
-                            { date: "2025-04-22", count: 224,},
-                            { date: "2025-04-23", count: 138,},
-                            { date: "2025-04-24", count: 387,},
-                            { date: "2025-04-25", count: 215,},
-                            { date: "2025-04-26", count: 75, },
-                            { date: "2025-04-27", count: 383,},
-                            { date: "2025-04-28", count: 122,},
-                            { date: "2025-04-29", count: 315,},
-                            { date: "2025-04-30", count: 454,},
-                            { date: "2025-05-01", count: 165,},
-                            { date: "2025-05-02", count: 293,},
-                            { date: "2025-05-03", count: 247,},
-                            { date: "2025-05-04", count: 385,},
-                            { date: "2025-05-05", count: 481,},
-                            { date: "2025-05-06", count: 498,},
-                            { date: "2025-05-07", count: 388,},
-                            { date: "2025-05-08", count: 149,},
-                            { date: "2025-05-09", count: 227,},
-                            { date: "2025-05-10", count: 293,},
-                            { date: "2025-05-11", count: 335,},
-                            { date: "2025-05-12", count: 197,},
-                            { date: "2025-05-13", count: 197,},
-                            { date: "2025-05-14", count: 448,},
-                            { date: "2025-05-15", count: 473,},
-                            { date: "2025-05-16", count: 338,},
-                            { date: "2025-05-17", count: 499,},
-                            { date: "2025-05-18", count: 315,},
-                            { date: "2025-05-19", count: 235,},
-                            { date: "2025-05-20", count: 177,},
-                            { date: "2025-05-21", count: 82, },
-                            { date: "2025-05-22", count: 81, },
-                            { date: "2025-05-23", count: 252,},
-                            { date: "2025-05-24", count: 294,},
-                            { date: "2025-05-25", count: 201,},
-                            { date: "2025-05-26", count: 213,},
-                            { date: "2025-05-27", count: 420,},
-                            { date: "2025-05-28", count: 233,},
-                            { date: "2025-05-29", count: 78, },
-                            { date: "2025-05-30", count: 340,},
-                            { date: "2025-05-31", count: 178,},
-                            { date: "2025-06-01", count: 178,},
-                            { date: "2025-06-02", count: 470,},
-                            { date: "2025-06-03", count: 103,},
-                            { date: "2025-06-04", count: 439,},
-                            { date: "2025-06-05", count: 88, },
-                            { date: "2025-06-06", count: 294,},
-                            { date: "2025-06-07", count: 323,},
-                            { date: "2025-06-08", count: 385,},
-                            { date: "2025-06-09", count: 438,},
-                            { date: "2025-06-10", count: 155,},
-                            { date: "2025-06-11", count: 92, },
-                            { date: "2025-06-12", count: 492,},
-                            { date: "2025-06-13", count: 81, },
-                            { date: "2025-06-14", count: 426,},
-                            { date: "2025-06-15", count: 307,},
-                            { date: "2025-06-16", count: 371,},
-                            { date: "2025-06-17", count: 475,},
-                            { date: "2025-06-18", count: 107,},
-                            { date: "2025-06-19", count: 341,},
-                            { date: "2025-06-20", count: 408,},
-                            { date: "2025-06-21", count: 169,},
-                            { date: "2025-06-22", count: 317,},
-                            { date: "2025-06-23", count: 480,},
-                            { date: "2025-06-24", count: 132,},
-                            { date: "2025-06-25", count: 141,},
-                            { date: "2025-06-26", count: 434,},
-                            { date: "2025-06-27", count: 448,},
-                            { date: "2025-06-28", count: 149,},
-                            { date: "2025-06-29", count: 103,},
-                            { date: "2025-06-30", count: 446,},
-                        ]}
-                        options={{
-                            container: {
-                                date: {
-                                    label: "Date",
-                                    color: "var(--chart-1)",
+                    <ChartA11y
+                        titleId="chart-title-trend"
+                        descId="chart-desc-trend"
+                        descText={`顯示 ${new Date(range.from).toLocaleDateString()} 至 ${new Date(range.to).toLocaleDateString()} 的交易金額趨勢線圖。${platform ? `目前僅顯示${PLATFORMS[platform]}平台。` : "包含所有平台。"} 資料點數：${trend.length}。`}
+                    >
+                        <ChartRenderer
+                            name="trend-statistics"
+                            variant='Line'
+                            data={trend}
+                            options={{
+                                container: {
+                                    date: { label: "日期", color: "var(--chart-1)" },
+                                    orders: { label: "訂單數" },
+                                    totalSales: { label: "交易金額" },
                                 },
-                            },
-                            chart: {
-                                xAxisField: 'date',
-                                yAxisField: 'count',
-                                showYLabel: false,
-                                showDataDot: false,
-                            }
-                        }}
-                        className={"h-64"}
-                    />
-                </CardContent>
-            </Card>
-            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
-                <CardHeader>
-                    <CardTitle>每月交易趨勢</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ChartRenderer  
-                        name="monthly-trend"
-                        variant='Line'
-                        data={[
-                            { month: "2025-02", count: 2},
-                            { month: "2025-03", count: 5},
-                            { month: "2025-04", count: 9},
-                            { month: "2025-05", count: 7},
-                            { month: "2025-06", count: 10},
-                            { month: "2025-07", count: 5}
-                        ]}
-                        options={{
-                            container: {
-                                month: {
-                                    label: "Month",
-                                    color: "var(--chart-1)",
-                                },
-                            },
-                            chart: {
-                                xAxisField: 'month',
-                                yAxisField: 'count',
-                            }
-                        }}    
-                        className={"h-64"}
-                    />
-                </CardContent>
-            </Card>
-            
-            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
-                <CardHeader>
-                    <CardTitle>熱門商品排名</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ChartRenderer  
-                        name="popular-product"
-                        variant='Bar'
-                        data={[
-                            { productType: "Google Chrome TV", totalPrice: 2350 },
-                            { productType: "戽斗星球", totalPrice: 1200 },
-                            { productType: "來貘杯緣子", totalPrice: 500 },
-                            { productType: "皮卡丘存錢筒", totalPrice: 350 },
-                            { productType: "運動短褲", totalPrice: 200 },
-                            { productType: "護髮油", totalPrice: 180 },
-                        ]}
-                        options={{
-                            container: {
-                                productType: {
-                                    label: "productType",
-                                    color: "var(--chart-1)",
-                                },
-                                totalPrice: {
-                                    label: "totalPrice",
-                                    color: "var(--chart-1)",
-                                },
-                            },
-                            chart: {
-                                xAxisField: 'productType',
-                                yAxisField: 'totalPrice',
-                                isHorizontal: true,
-                            }
-                        }}
-                    />
-                </CardContent>
-            </Card>
-             <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
-                <CardHeader>
-                    <CardTitle>商品類別占比</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ChartRenderer  
-                        name="product-type"
-                        variant='Pie'
-                        data={PRODUCT_TYPE_DATAS.reduce((prev, cur, curIndex) => {
-                            return [
-                                ...prev,
-                                {
-                                    ...cur,
-                                    fill: `var(--color-${cur.type})`,
+                                chart: {
+                                    xAxisField: 'date',
+                                    yAxisField: 'totalSales',   // 你也可切成 'orders'
+                                    sizeField: 'platform',
+                                    showYLabel: false,
                                 }
-                            ]
-                        }, [])}
-                        options={{
-                            container: {
-                                visitors: {
-                                    label: "Visitors",
+                            }}
+                            className={"h-64"}
+                        />
+                    </ChartA11y>
+                </CardContent>
+            </Card>
+            <Card className="w-full min-w-0 md:col-span-2 lg:col-span-1">
+                <CardHeader>
+                    <CardTitle id="chart-title-platform">銷售平台交易統計</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChartA11y
+                        titleId="chart-title-platform"
+                        descId="chart-desc-platform"
+                        descText={`顯示 ${new Date(range.from).toLocaleDateString()} 至 ${new Date(range.to).toLocaleDateString()} 各平台交易總額的長條圖。`}
+                    >
+                        <ChartRenderer
+                            name="platform-statistics"
+                            variant='Bar'
+                            data={platforms.map(p => ({
+                                platform: p.platform === 'shopee' ? '蝦皮' : p.platform === 'carousell' ? '旋轉' : '其他',
+                                totalSales: p.totalSales,
+                            }))}
+                            options={{
+                                container: {
+                                    platform: { label: "平台", color: "var(--chart-1)" },
+                                    totalSales: { label: "交易總額" },
                                 },
-                                ...(PRODUCT_TYPE_DATAS.reduce((prev, cur, curIndex) => {
-                                    return ({
-                                        ...prev, 
-                                        [`${cur.type}`]: {
-                                            label: `${cur.type}`,
-                                            color: `var(--chart-${curIndex+1})`,
-                                        }
-                                    });
-                                }, {}))
-                            },
-                            chart: {
-                                totalLabel: 'Visitors',
-                                xAxisField: 'type',
-                                yAxisField: 'visitors',
-                                
-                            }
-                        }}
-                        // className={"h-64"}
-                    />
+                                chart: {
+                                    xAxisField: 'platform',
+                                    yAxisField: 'totalSales',
+                                    isHorizontal: true,
+                                }
+                            }}
+                            className={"h-64"}
+                        />
+                    </ChartA11y>
+                </CardContent>
+            </Card>
+
+            <Card className="w-full min-w-0 md:col-span-2">
+                <CardHeader>
+                    <CardTitle id="chart-title-popular">熱門商品瀏覽次數排行</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChartA11y
+                        titleId="chart-title-popular"
+                        descId="chart-desc-popular"
+                        descText="顯示近一段期間瀏覽次數最高的商品列表，數值為瀏覽次數。"
+                    >
+                        <ChartRenderer
+                            name="popular-product"
+                            variant='Bar'
+                            data={[
+                                { productType: "Google Chrome TV", views: 85 },
+                                { productType: "戽斗星球", views: 72 },
+                                { productType: "來貘杯緣子", views: 60 },
+                                { productType: "皮卡丘存錢筒", views: 55 },
+                                { productType: "運動短褲", views: 40 },
+                                { productType: "護髮油", views: 5 },
+                            ]}
+                            options={{
+                                container: {
+                                    productType: {
+                                        label: "productType",
+                                        color: "var(--chart-1)",
+                                    },
+                                    views: {
+                                        label: "views",
+                                        color: "var(--chart-1)",
+                                    },
+                                },
+                                chart: {
+                                    xAxisField: 'productType',
+                                    yAxisField: 'views',
+                                    isHorizontal: true,
+                                }
+                            }}
+                            className={"h-64"}
+                        />
+                    </ChartA11y>
+                </CardContent>
+            </Card>
+            <Card className="w-full min-w-0 md:col-span-2 ">
+                <CardHeader>
+                    <CardTitle id="chart-title-scatter">銷售額 vs 淨收入分佈圖</CardTitle>
+                </CardHeader>
+                <CardContent className="h-64">
+                    <ChartA11y
+                        titleId="chart-title-scatter"
+                        descId="chart-desc-scatter"
+                        descText={`散點圖比較單筆訂單的銷售額（X 軸）與淨收入（Y 軸），顏色代表平台。${platform ? `目前僅顯示${PLATFORMS[platform]}平台。` : "包含所有平台。"} 點數：${scatter?.datas?.length ?? 0}。`}
+                    >
+                        <ChartRenderer
+                            name="sales-revenue-scatter"
+                            variant="Scatter"
+                            data={scatter.datas}
+                            options={{
+                                container: {
+                                    sales: { label: "銷售額", formatter: (n) => n.toLocaleString() },
+                                    revenue: { label: "淨收入", formatter: (n) => n.toLocaleString() },
+                                    // 針對各平台註冊顏色（可選）
+                                    shopee: { color: "var(--chart-1)" },
+                                    carousell: { color: "var(--chart-2)" },
+                                    other: { color: "var(--chart-3)" },
+                                },
+                                chart: {
+                                    xAxisField: "sales",
+                                    yAxisField: "revenue",
+                                    colorField: "platform", // 以平台分群上色
+                                    // sizeField: "count",   // 若想用氣泡大小，可補這個欄位
+                                    showLegend: true,
+                                    a11y: { enableDotTitle: true }
+                                },
+                            }}
+                            legendContent={platformLegend}
+                            tooltipContent={PlatformScatterTooltip}
+                            className={"h-64"}
+                        />
+                    </ChartA11y>
+                </CardContent>
+            </Card>
+
+            <Card className="w-full min-w-0 md:col-span-1">
+                <CardHeader>
+                    <CardTitle id="chart-title-category">各商品類別銷售占比</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChartA11y
+                        titleId="chart-title-category"
+                        descId="chart-desc-category"
+                        descText="圓環圖顯示各商品類別於篩選期間的銷售額占比，中央數字為總額。"
+                    >
+                        <ChartRenderer
+                            name="product-type"
+                            variant='Pie'
+                            data={categories.reduce((prev, cur, curIndex) => {
+                                return [
+                                    ...prev,
+                                    {
+                                        ...cur,
+                                        fill: `var(--color-${cur.type})`,
+                                    }
+                                ]
+                            }, [])}
+                            options={{
+                                container: {
+                                    total: {
+                                        label: "Total",
+                                    },
+                                    ...(categories.reduce((prev, cur, curIndex) => {
+                                        return ({
+                                            ...prev,
+                                            [`${cur.type}`]: {
+                                                label: `${cur.type}`,
+                                                color: `var(--chart-${curIndex + 1})`,
+                                            }
+                                        });
+                                    }, {}))
+                                },
+                                chart: {
+                                    totalLabel: 'Total',
+                                    xAxisField: 'type',
+                                    yAxisField: 'totalSales',
+
+                                }
+                            }}
+                            className={"h-64"}
+                        />
+                    </ChartA11y>
                 </CardContent>
             </Card>
 
         </>
     );
-    
+
 }

@@ -23,6 +23,7 @@ export function useTableDataSource({
     const [raw, setRaw] = useState([]);
     const [totalRemote, setTotalRemote] = useState(null);
     const [revenueDomain, setRevenueDomain] = useState(null);
+    const [meta, setMeta] = useState({});
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -41,6 +42,7 @@ export function useTableDataSource({
                     setRaw(items);
                     setTotalRemote(Array.isArray(res) ? null : (res?.total ?? null));
                     setRevenueDomain(res.revenueDomain);
+                    setMeta(res.meta ?? {});
                 }
             } catch (e) {
                 if (!cancel) setError(e?.message || "載入資料失敗");
@@ -68,6 +70,7 @@ export function useTableDataSource({
         rows: localProcessed.rows,
         total: localProcessed.total,
         revenueDomain,
+        meta,
         isLoading,
         error,
         refetch: () => {

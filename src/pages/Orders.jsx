@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Slider } from "@/components/ui/slider";
 import { X, RotateCcw, SlidersHorizontal, Copy, Check } from "lucide-react";
 /** actions */
-import { getOrders } from "@/actions";
+import { getOrders } from "@/actions/orders";
 /** constants */
 import { PLATFORMS } from "@/constants";
 /** hooks */
@@ -167,10 +167,10 @@ const getColumnDefs = (term) => ([
         key: 'platform',
         name: '銷售平台',
         align: 'center',
-        searchText: (value) => PLATFORMS?.[value] ?? String(value),
+        searchText: (value) => PLATFORMS?.[value].label ?? String(value),
         render: ({ value }) => (
             <Badge variant="secondary">
-                <HL text={PLATFORMS[`${value}`]} term={term} />
+                <HL text={PLATFORMS[`${value}`].label} term={term} />
             </Badge>
         )
     },
@@ -452,7 +452,7 @@ export default function Orders() {
                             {
                                 Object.keys(PLATFORMS).map((p) => (
 
-                                    <SelectItem key={`select-item-${p}`} data-testid={`select-item-${p}`} value={p}>{PLATFORMS[`${p}`]}</SelectItem>
+                                    <SelectItem key={`select-item-${p}`} data-testid={`select-item-${p}`} value={p}>{PLATFORMS[`${p}`].label}</SelectItem>
                                 ))
                             }
                         </SelectContent>
@@ -570,7 +570,7 @@ export default function Orders() {
                     )}
                     {hasPlatform && (
                         <Badge variant="secondary" className="gap-1">
-                            平台：{PLATFORMS[`${platform}`]}
+                            平台：{PLATFORMS[`${platform}`].label}
                             <button
                                 type="button"
                                 aria-label="移除平台篩選"

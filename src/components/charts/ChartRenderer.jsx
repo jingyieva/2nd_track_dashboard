@@ -15,6 +15,8 @@ export function ChartRenderer({
   isLoading = false,
   fallback = null,
   className = '',
+  legendContent,
+  tooltipContent,
 }) {
   // const { resolvedTheme } = useTheme();
   const ChartComponent = chartType[variant];
@@ -55,6 +57,8 @@ export function ChartRenderer({
             data={data}
             chartConfig={options?.chart}
             containerConfig={options?.container}
+            legendContent={legendContent}
+            tooltipContent={tooltipContent}
         />
     </div>
   );

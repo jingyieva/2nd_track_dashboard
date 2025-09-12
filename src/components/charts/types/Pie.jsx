@@ -9,15 +9,27 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+import { cn } from '@/lib/utils'
+
+import { useTheme } from '@/contexts/theme-context';
+
 const RADIAN = Math.PI / 180;
 
-const renderSingleDataLabel = ({ cx, cy, outerRadius, innerRadius, midAngle, percent }) => {
+const renderSingleDataLabel = ({ cx, cy, outerRadius, innerRadius, midAngle, percent, curTheme }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
     const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
 
     return (
-        <text data-testid={`data-label-${x}-${y}`} x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        <text 
+            data-testid={`data-label-${x}-${y}`} 
+            x={x} 
+            y={y} 
+            fill={curTheme === "light" ? "#000000": "#ffffff"} 
+            textAnchor={x > cx ? 'start' : 'end'} 
+            dominantBaseline="central"
+            fontWeight={'bold'}
+        >
             {`${((percent ?? 1) * 100).toFixed(0)}%`}
         </text>
     );
@@ -27,8 +39,10 @@ export default function CustomPieChart({
     name = 'custom',
     data = [],
     containerConfig = {},
-    chartConfig = {}
+    chartConfig = {},
+    className = ""
 }) {
+    const { resolvedTheme: curTheme } = useTheme();
     const {        
         showTooltip = true,
         showDataLabel = true,
@@ -45,6 +59,7 @@ export default function CustomPieChart({
         <ChartContainer 
             config={containerConfig}
             data-testid={`${name}-pie-chart`}
+            className={cn("w-full h-64", className)}
         >
             {/* Recharts part */}
             <PieChart>
@@ -61,8 +76,8 @@ export default function CustomPieChart({
                     data={data}
                     dataKey={yAxisField}
                     nameKey={xAxisField}
-                    innerRadius="60%"
-                    outerRadius="80%"
+                    innerRadius="65%"
+                    outerRadius="95%"
                     strokeWidth={5}
                     labelLine={false}
                     label={({ cx, cy, outerRadius, innerRadius, midAngle, percent }) => {
@@ -70,7 +85,7 @@ export default function CustomPieChart({
                             <>
                                 {/* data laabel */}
                                 {
-                                    showDataLabel ? renderSingleDataLabel({cx, cy, outerRadius, innerRadius, midAngle, percent}) : null
+                                    showDataLabel ? renderSingleDataLabel({cx, cy, outerRadius, innerRadius, midAngle, percent, curTheme}) : null
                                 }
                                 {/* center label */}
                                 <text

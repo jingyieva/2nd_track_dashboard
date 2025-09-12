@@ -8,13 +8,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { cn } from '@/lib/utils'
 
 
 export default function CustomBarChart({
     name = 'custom',
     data = [],
     containerConfig = {},
-    chartConfig = {}
+    chartConfig = {},
+    className
 }) {
     const {        
         showY = false,
@@ -35,6 +37,7 @@ export default function CustomBarChart({
         <ChartContainer 
             config={containerConfig}
             data-testid={`${name}-bar-chart`}
+            className={cn("w-full h-64", className)}
         >
             {/* Recharts part */}
             <BarChart 

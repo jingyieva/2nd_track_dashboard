@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ChartSkeleton from "@/components/charts/ChartSkeleton";
 import BelowFold from '@/components/BelowFold'
 import KPICard from "@/pages/Dashboard/KPICard";
-import { useVisible } from "@/hooks/useVisible";
+import FiltersBar from "@/pages/Dashboard/FiltersBar";
 
 function ChartsFoldLoader() {
   const [Mod, setMod] = useState(null)
@@ -23,6 +23,9 @@ export default function Dashboard (){
 
     return (
         <div className="space-y-6">
+          <div className="flex items-center justify-end">
+            <FiltersBar />
+          </div>
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <KPICard />
             </section>

@@ -11,6 +11,13 @@ const rng = () => rand() / 0xffffffff;
 const platforms = ['shopee', 'carousell', 'other'];
 const shippingPayers = ['buyer', 'seller'];
 
+const productNames = [
+    '運動短褲', '來貘杯緣子', '戽斗星球扭蛋', 'Google TV Streamer', '皮卡丘存錢統', '迷你麻將', '免沖洗護髮膠囊',
+    'Airpod pro', '阿楞公仔', '貓頭鷹公仔', '熊貓公仔', 'Snoopy鑰匙圈', '夜光精靈公仔', '保溫瓶', '羅技無線滑鼠',
+];
+
+const productTypes = ['electronics', 'accessories', 'toys', 'clothes', 'books'];
+
 const now = new Date();
 
 export const db = {
@@ -44,4 +51,11 @@ export const db = {
             revenue,
         };
     }),
+    products: Array.from(productNames).map((p, i) => ({
+        product_id: `P-${1001 + i}`,
+        name: `p`,
+        views: Math.round(rng() * 100),
+        type: productTypes[Math.floor(rng() * productTypes.length)]
+    })),
+    map_order_to_products: [], // 之後可補
 };
