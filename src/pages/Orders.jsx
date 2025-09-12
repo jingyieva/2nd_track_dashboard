@@ -293,7 +293,7 @@ export default function Orders() {
         return { min, max };
     }, [domain]);
 
-    // 初始與 domain 變動時，初始化或夾限 appliedRange
+    // 初始與 domain 變動時，初始化或夾限 revRange
     useEffect(() => {
         if (revenueDomain.min >= revenueDomain.max) return;
         if (!Array.isArray(revRange)) {
@@ -308,9 +308,9 @@ export default function Orders() {
         if (clamped[0] !== lo || clamped[1] !== hi) {
             setRevRange(clamped);
         }
-    }, [revenueDomain.min, revenueDomain.max]); // eslint-disable-line
+    }, [revenueDomain.min, revenueDomain.max, platform]); // eslint-disable-line
 
-    // 當 appliedRange 變更時，若沒有正在拖動，保持 draft 同步
+    // 當 revRange 變更時，若沒有正在拖動，保持 draft 同步
     useEffect(() => {
         if (!Array.isArray(revRange)) return;
         if (!Array.isArray(draftRange)) {
@@ -481,7 +481,7 @@ export default function Orders() {
                                         setDraftRange((prev) => {
                                             const [_, hiPrev] = Array.isArray(prev)
                                                 ? prev
-                                                : (Array.isArray(appliedRange) ? appliedRange : [revenueDomain.min, revenueDomain.max]);
+                                                : (Array.isArray(revRange) ? revRange : [revenueDomain.min, revenueDomain.max]);
                                             return [Math.min(Math.max(v, revenueDomain.min), hiPrev), hiPrev];
                                         })
                                     }}
@@ -499,7 +499,7 @@ export default function Orders() {
                                         setDraftRange((prev) => {
                                             const [loPrev, _] = Array.isArray(prev)
                                                 ? prev
-                                                : (Array.isArray(appliedRange) ? appliedRange : [revenueDomain.min, revenueDomain.max]);
+                                                : (Array.isArray(revRange) ? revRange : [revenueDomain.min, revenueDomain.max]);
                                             return [loPrev, Math.max(Math.min(v, revenueDomain.max), loPrev)];
                                         });
                                     }}
@@ -511,7 +511,7 @@ export default function Orders() {
                                 <RangeSliderBubbles
                                     min={revenueDomain.min}
                                     max={revenueDomain.max}
-                                    step={100}
+                                    step={50}
                                     value={draftRange ?? revRange ?? [revenueDomain.min, revenueDomain.max]}
                                     onChange={setDraftRange}
                                     onCommit={onRangeCommit}

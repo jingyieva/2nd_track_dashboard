@@ -31,6 +31,14 @@ export const handlers = [
 
         let items = db.orders;
 
+        // 計算淨收入範圍（含 5% padding）
+        let min = Infinity, max = -Infinity;
+        for (const r of items) {
+            const n = Number(r.revenue);
+            if (!Number.isNaN(n)) { if (n < min) min = n; if (n > max) max = n; }
+        }
+        const pad = Math.round((max - min) * 0.05);
+
         // 日期
         if (from || to) {
             items = db.orders.filter(o => o.order_date >= from && o.order_date <= to);
@@ -51,13 +59,6 @@ export const handlers = [
 
         // 排序
         items.sort((a, b) => order === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]);
-        // 計算淨收入範圍（含 5% padding）
-        let min = Infinity, max = -Infinity;
-        for (const r of items) {
-            const n = Number(r.revenue);
-            if (!Number.isNaN(n)) { if (n < min) min = n; if (n > max) max = n; }
-        }
-        const pad = Math.round((max - min) * 0.05);
 
         return HttpResponse.json({
             datas: items,
@@ -66,7 +67,7 @@ export const handlers = [
             meta: {
                 platformsAll: ["shopee", "carousell", "other"],
                 platformsAvailable: Array.from(new Set(items.map(x => x.platform))),
-                datasRange: {   
+                datasRange: {
                     start: from,
                     end: to,
                 }
