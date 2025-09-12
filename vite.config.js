@@ -16,11 +16,11 @@ const isStorybook = process.env.STORYBOOK === '1';
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), visualizer({
-    template: 'network',
+    // template: 'network',
     filename: 'dist/stats.html',
     gzipSize: true,
     brotliSize: true
-  }), 
+  }),
   !isStorybook && mode === 'production' ? VitePWA({
     registerType: 'autoUpdate',
     includeAssets: ['logo/*', 'favicon.ico'],
@@ -45,9 +45,13 @@ export default defineConfig(({ mode }) => ({
     }
   }) : undefined
   ],
+  optimizeDeps: {
+    include: ["lodash-es"],
+  },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src') // 把 '@' 映射到 src/
+      '@': path.resolve(__dirname, 'src'), // 把 '@' 映射到 src/
+      lodash: "lodash-es",
     }
   },
   build: {
@@ -55,14 +59,19 @@ export default defineConfig(({ mode }) => ({
     cssCodeSplit: true,
     sourcemap: false,
     modulePreload: false,
+    minify:'esbuild',
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (!id.includes('node_modules')) return;
-          if (id.includes('recharts')) return 'recharts';
-          if (id.includes('lucide-react')) return 'icons';
-          if (id.includes('react') || id.includes('react-dom')) return 'react-vendor';
-          return 'vendor';
+          if (!id.includes('node_modules')) return
+          if (id.includes('react-router-dom') || id.includes('react-router') || id.includes('@remix-run/router') ) {
+            return 'router'
+          }
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react-vendor'
+          if (id.includes('recharts')) return 'recharts'
+          if (/(^|\/)d3[-/]/.test(id)) return 'd3'
+          if (id.includes('lucide-react')) return 'icons'
+          return 'vendor'
         }
       }
     }
@@ -71,11 +80,11 @@ export default defineConfig(({ mode }) => ({
     projects: [{
       extends: true,
       plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
+        // The plugin will run tests for the stories defined in your Storybook config
+        // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+        storybookTest({
+          configDir: path.join(dirname, '.storybook')
+        })],
       test: {
         name: 'storybook',
         browser: {
