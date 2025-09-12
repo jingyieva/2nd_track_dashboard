@@ -1,3 +1,21 @@
+# [2.0.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.8.0...v2.0.0) (2025-09-12)
+
+
+* feat(dashboard)!: introduce global filters and improve accessibility ([f9d8097](https://github.com/jingyieva/2nd_track_dashboard/commit/f9d80978d3c849c7f80d7b1b97ce653f46331ac4))
+
+
+### Features
+
+* **orders:** 重構訂單列表資料流與篩選邏輯 ([c137071](https://github.com/jingyieva/2nd_track_dashboard/commit/c13707132e75982645c6626ae00bd7483f1db1b7))
+
+
+### BREAKING CHANGES
+
+* Dashboard and Orders pages no longer rely on local state for filters.
+All filtering logic is now managed via the global Zustand store.
+Previous usage of local filter state or props will no longer work and must be migrated
+to use the store's API (useFiltersStore).
+
 # [1.8.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v1.7.3...v1.8.0) (2025-09-05)
 
 
