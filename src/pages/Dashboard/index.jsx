@@ -23,9 +23,7 @@ export default function Dashboard (){
 
     return (
         <div className="space-y-6">
-          <div className="flex items-center justify-end">
             <FiltersBar />
-          </div>
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <KPICard />
             </section>

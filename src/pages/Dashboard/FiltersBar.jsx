@@ -20,32 +20,46 @@ export default function FiltersBar() {
 
     return (
         <div className="flex flex-col md:flex-row flex-wrap items-center lg:justify-end gap-3">
-            <label className="text-sm text-muted-foreground hidden md:block">區間</label>
+            <label className="sr-only md:not-sr-only md:text-sm md:text-muted-foreground">區間</label>
             <ToggleGroup
                 type="single"
                 value={preset}
                 onValueChange={(value) => value && setPreset(value)}
                 aria-label="區間篩選"
+                className="w-full md:w-auto"
             >
                 {
                     presets.map(p => (
-                        <ToggleGroupItem key={p.value} value={p.value} className={`px-3 py-1`} aria-pressed={preset === p.value} aria-label={p.label}>
+                        <ToggleGroupItem 
+                            key={p.value} 
+                            value={p.value} 
+                            className={`flex-1 min-w-0 md:flex-none px-3 py-1`} 
+                            aria-pressed={preset === p.value} 
+                            aria-label={p.label}
+                        >
                             {p.label}
                         </ToggleGroupItem>
                     ))
                 }
             </ToggleGroup>
 
-            <label className="text-sm text-muted-foreground hidden md:block">平台</label>
+            <label className="sr-only md:not-sr-only md:text-sm md:text-muted-foreground">平台</label>
             <ToggleGroup
                 type="single"
                 value={platform}
                 onValueChange={(value) => value && setPlatform(value)}
                 aria-label="平台篩選"
+                className="w-full md:w-auto"
             >
                 {
                     platforms.map(p => (
-                        <ToggleGroupItem key={p.value} value={p.value} className={`px-3 py-1 `} aria-pressed={platform === p.value} aria-label={p.label}>
+                        <ToggleGroupItem 
+                        key={p.value} 
+                        value={p.value} 
+                        className={`flex-1 min-w-0 md:flex-none px-3 py-1`} 
+                        aria-pressed={platform === p.value} 
+                        aria-label={p.label}
+                    >
                             {p.label}
                         </ToggleGroupItem>
                     ))
