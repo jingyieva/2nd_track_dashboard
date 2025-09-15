@@ -1,3 +1,17 @@
+# [2.1.0](https://github.com/jingyieva/2nd_track_dashboard/compare/v2.0.2...v2.1.0) (2025-09-15)
+
+
+### Bug Fixes
+
+* **rwd:** Adjust filterbar in Dashboard responsive layout when in medium screen ([86b19f7](https://github.com/jingyieva/2nd_track_dashboard/commit/86b19f745e940b3334535474f1f5a5e2987213f8))
+* **rwd:** improve Orders page filters and pagination layout on small screens ([7efbd5e](https://github.com/jingyieva/2nd_track_dashboard/commit/7efbd5e7eb0b32d21be948cbc2925e6f1b8528db))
+
+
+### Features
+
+* **ui:** improve FilterBar in Dashboard responsiveness on mobile ([173756e](https://github.com/jingyieva/2nd_track_dashboard/commit/173756eed8a4944213ae5e7f2f439232f5e86afc))
+* **ui:** improve website title responsive on mobile ([d4b440e](https://github.com/jingyieva/2nd_track_dashboard/commit/d4b440e88d3fc4d0a2304692eff49efc90966c3e))
+
 ## [2.0.2](https://github.com/jingyieva/2nd_track_dashboard/compare/v2.0.1...v2.0.2) (2025-09-12)
 
 
