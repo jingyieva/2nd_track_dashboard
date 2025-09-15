@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Slider } from "@/components/ui/slider";
 import { X, RotateCcw, SlidersHorizontal, Copy, Check } from "lucide-react";
@@ -418,9 +419,9 @@ export default function Orders() {
         <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">訂單列表</h2>
             {/* 控制列：Quick Filter + 平台 Select */}
-            <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center gap-2">
-                    <div className="relative w-[220px]">
+            <div className="flex flex-wrap flex-col md:flex-row items-center gap-2">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 flex-1 w-full md:w-auto">
+                    <div className="relative flex-1 w-full md:w-[220px]">
                         <Input
                             ref={searchRef}
                             aria-label="快速搜尋"
@@ -444,7 +445,7 @@ export default function Orders() {
                         value={platform}
                         onValueChange={(v) => setPlatform(v === "__ALL__" ? "" : v)}
                     >
-                        <SelectTrigger aria-label="平台篩選" className="w-[140px]">
+                        <SelectTrigger aria-label="平台篩選" className="flex-1 w-full md:w-[140px]">
                             <SelectValue placeholder="全部平台" />
                         </SelectTrigger>
                         <SelectContent>
@@ -461,7 +462,7 @@ export default function Orders() {
                 {/* Revenue 區間：雙滑塊 + 精準輸入 */}
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button variant="outline" size="sm" className="flex items-center gap-2">
+                        <Button variant="outline" size="default" className="flex items-center gap-2 flex-1 md:flex-none w-full md:w-[100px]">
                             <SlidersHorizontal className="h-4 w-4" />
                             進階篩選
                         </Button>
@@ -528,10 +529,10 @@ export default function Orders() {
                     </PopoverContent>
                 </Popover>
                 {/* 密度切換 */}
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">密度</span>
-                    <Select value={density} onValueChange={setDensity}>
-                        <SelectTrigger aria-label="表格密度" className="h-8 w-[120px]">
+                <div className="flex items-center gap-2 flex-1 w-full md:w-auto">
+                    <span className="sr-only md:not-sr-only text-sm text-muted-foreground">密度</span>
+                    <Select value={density} onValueChange={setDensity} >
+                        <SelectTrigger aria-label="表格密度" className="hidden md:flex h-8 w-full md:w-[150px]">
                             <SelectValue placeholder="舒適" />
                         </SelectTrigger>
                         <SelectContent>
@@ -539,6 +540,32 @@ export default function Orders() {
                             <SelectItem value="compact">緊湊</SelectItem>
                         </SelectContent>
                     </Select>
+                    <ToggleGroup
+                        type="single"
+                        value={density}
+                        onValueChange={(value) => value && setPreset(value)}
+                        aria-label="表格密度"
+                        className="flex md:hidden w-full flex-wrap"
+                    >
+                        <ToggleGroupItem 
+                            value="comfy" 
+                            className={`flex-1 w-50 px-3 py-1`} 
+                            aria-pressed={density === "comfy"} 
+                            aria-label="comfy"
+                        >
+                            舒適
+                        </ToggleGroupItem>
+                        <ToggleGroupItem 
+                            value="compact" 
+                            className={`flex-1 w-50 px-3 py-1`} 
+                            aria-pressed={density === "compact"} 
+                            aria-label="compact"
+                        >
+                            緊湊
+                        </ToggleGroupItem>
+                            
+                        
+                    </ToggleGroup>
                 </div>
 
                 <div className="ml-auto">

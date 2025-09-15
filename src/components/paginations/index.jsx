@@ -33,7 +33,7 @@ export default function CustomPagination({
     const handlePageClick = (page) => () => switchPage(page);
 
     return (
-        <div className="m-3 flex items-center justify-between">
+        <div className="m-3 flex items-center flex-col md:flex-row justify-between gap-2">
             <Pagination>
                 <PaginationContent>
                     <PaginationItem>
