@@ -19,7 +19,7 @@ export default function FiltersBar() {
     const { preset, platform, setPreset, setPlatform } = useFiltersStore();
 
     return (
-        <div className="flex flex-col md:flex-row flex-wrap items-center lg:justify-end gap-3">
+        <div className="flex flex-col md:flex-row flex-wrap items-center md:justify-end gap-3">
             <label className="sr-only md:not-sr-only md:text-sm md:text-muted-foreground">區間</label>
             <ToggleGroup
                 type="single"

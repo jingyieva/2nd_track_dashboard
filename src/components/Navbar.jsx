@@ -30,10 +30,22 @@ export default function Navbar (){
                 {/* Left: Logo + Title */}
                 <div className="flex items-center gap-3">
                     <Link aria-label="Home" to={"/"} >
-                        <img src="/logo/2nd-track-mark.svg" alt="2nd Track" fetchPriority="low" decoding="async" className="h-10 w-10" width="40" height="40" />
+                        <img 
+                            src="/logo/2nd-track-mark.svg" 
+                            alt="2nd Track Dashboard" 
+                            title="2nd Track Dashboard" 
+                            fetchPriority="low" 
+                            decoding="async" 
+                            className="h-10 w-10" 
+                            width="40" 
+                            height="40" 
+                        />
                     </Link>
                     <Link aria-label="Home" to={"/"} >
-                        <h1 className="sr-only md:not-sr-only text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight break-words md:[text-wrap:balance]">2nd Track Dashboard</h1>
+                        <h1 className="sr-only md:not-sr-only text-2xl md:text-4xl lg:text-5xl 
+                            font-extrabold leading-tight tracking-tight break-words md:[text-wrap:balance]">
+                            2nd Track Dashboard
+                        </h1>
                     </Link>
                 </div>
 
