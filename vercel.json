@@ -24,21 +24,23 @@
             "statusCode": 308
         }
     ],
-
     "headers": [
         {
-            "source": "/(.*)",
             "headers": [
                 {
-                    "key": "Content-Security-Policy-Report-Only",
-                    "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; report-to default-endpoint;"
-                },
-                {
-                    "key": "Report-To",
-                    "value": "{\"group\":\"default-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"/api/csp-report\"}]}"
+                    "source": "/(.*)",
+                    "headers": [
+                        {
+                            "key": "Content-Security-Policy-Report-Only",
+                            "value": "default-src 'self'; script-src 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; report-to default-endpoint;"
+                        },
+                        {
+                            "key": "Report-To",
+                            "value": "{\"group\":\"default-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"/api/csp-report\"}]}"
+                        }
+                    ]
                 }
             ]
         }
     ]
-
 }
