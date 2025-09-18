@@ -1,11 +1,44 @@
 {
     "rewrites": [
-        { "source": "/storybook", "destination": "/storybook/index.html" },
-        { "source": "/storybook/", "destination": "/storybook/index.html" },
-        { "source": "/storybook/(.*)", "destination": "/storybook/index.html" },
-        { "source": "/(.*)", "destination": "/" }
+        {
+            "source": "/storybook",
+            "destination": "/storybook/index.html"
+        },
+        {
+            "source": "/storybook/",
+            "destination": "/storybook/index.html"
+        },
+        {
+            "source": "/storybook/(.*)",
+            "destination": "/storybook/index.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
     ],
     "redirects": [
-        { "source": "/storybook", "destination": "/storybook/", "statusCode": 308 }
+        {
+            "source": "/storybook",
+            "destination": "/storybook/",
+            "statusCode": 308
+        }
+    ],
+
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "Content-Security-Policy-Report-Only",
+                    "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; report-to default-endpoint;"
+                },
+                {
+                    "key": "Report-To",
+                    "value": "{\"group\":\"default-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"/api/csp-report\"}]}"
+                }
+            ]
+        }
     ]
+
 }
